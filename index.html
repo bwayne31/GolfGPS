@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hadley 9-Hole GPS</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    label, select {
+      display: block;
+      margin: 10px 0;
+    }
+    .info {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hadley Creek GPS</h1>
+
+    <label for="holeSelect">Select Hole:</label>
+    <select id="holeSelect"></select>
+
+    <label for="teeSelect">Select Tee:</label>
+    <select id="teeSelect"></select>
+
+    <div class="info">
+      <p><strong>Par:</strong> <span id="par"></span></p>
+      <p><strong>Distance to Front:</strong> <span id="distFront">N/A</span> yards</p>
+      <p><strong>Distance to Middle:</strong> <span id="distMiddle">N/A</span> yards</p>
+      <p><strong>Distance to Back:</strong> <span id="distBack">N/A</span> yards</p>
+    </div>
+  </div>
+
+  <script>
+    const holes = [
+      {
+        number: 1,
+        par: 3,
+        tees: {
+          front: { lat: 44.042192, lon: -92.495989 },
+          middle: { lat: 44.042171, lon: -92.496203 },
+          back: { lat: 44.042167, lon: -92.496433 }
+        },
+        green: {
+          front: { lat: 44.042899, lon: -92.496062 },
+          middle: { lat: 44.042964, lon: -92.496062 },
+          back: { lat: 44.043021, lon: -92.496060 }
+        }
+      },
+      {
+        number: 2,
+        par: 3,
+        tees: {
+          front: { lat: 44.043521, lon: -92.496423 },
+          middle: { lat: 44.043538, lon: -92.496686 },
+          back: { lat: 44.043562, lon: -92.496948 }
+        },
+        green: {
+          front: { lat: 44.042886, lon: -92.497092 },
+          middle: { lat: 44.042848, lon: -92.497090 },
+          back: { lat: 44.042803, lon: -92.497085 }
+        }
+      },
+      {
+        number: 3,
+        par: 3,
+        tees: {
+          front: { lat: 44.042063, lon: -92.497578 },
+          middle: { lat: 44.042090, lon: -92.497847 },
+          back: { lat: 44.042107, lon: -92.498064 }
+        },
+        green: {
+          front: { lat: 44.042793, lon: -92.498284 },
+          middle: { lat: 44.042836, lon: -92.498288 },
+          back: { lat: 44.042891, lon: -92.498290 }
+        }
+      },
+      {
+        number: 4,
+        par: 3,
+        tees: {
+          front: { lat: 44.042678, lon: -92.498920 },
+          middle: { lat: 44.042648, lon: -92.499153 },
+          back: { lat: 44.042617, lon: -92.499371 }
+        },
+        green: {
+          front: { lat: 44.042000, lon: -92.499466 },
+          middle: { lat: 44.041961, lon: -92.499463 },
+          back: { lat: 44.041911, lon: -92.499455 }
+        }
+      },
+      {
+        number: 5,
+        par: 3,
+        tees: {
+          front: { lat: 44.041257, lon: -92.499753 },
+          middle: { lat: 44.041281, lon: -92.499991 },
+          back: { lat: 44.041314, lon: -92.500261 }
+        },
+        green: {
+          front: { lat: 44.041951, lon: -92.500405 },
+          middle: { lat: 44.041995, lon: -92.500405 },
+          back: { lat: 44.042047, lon: -92.500400 }
+        }
+      },
+      {
+        number: 6,
+        par: 3,
+        tees: {
+          front: { lat: 44.042652, lon: -92.500922 },
+          middle: { lat: 44.042679, lon: -92.501180 },
+          back: { lat: 44.042708, lon: -92.501437 }
+        },
+        green: {
+          front: { lat: 44.042100, lon: -92.501527 },
+          middle: { lat: 44.042064, lon: -92.501524 },
+          back: { lat: 44.042017, lon: -92.501518 }
+        }
+      },
+      {
+        number: 7,
+        par: 3,
+        tees: {
+          front: { lat: 44.041310, lon: -92.501781 },
+          middle: { lat: 44.041286, lon: -92.502000 },
+          back: { lat: 44.041254, lon: -92.502247 }
+        },
+        green: {
+          front: { lat: 44.041904, lon: -92.502391 },
+          middle: { lat: 44.041951, lon: -92.502391 },
+          back: { lat: 44.041997, lon: -92.502386 }
+        }
+      },
+      {
+        number: 8,
+        par: 3,
+        tees: {
+          front: { lat: 44.042632, lon: -92.502892 },
+          middle: { lat: 44.042658, lon: -92.503122 },
+          back: { lat: 44.042686, lon: -92.503379 }
+        },
+        green: {
+          front: { lat: 44.042061, lon: -92.503470 },
+          middle: { lat: 44.042024, lon: -92.503467 },
+          back: { lat: 44.041976, lon: -92.503462 }
+        }
+      },
+      {
+        number: 9,
+        par: 3,
+        tees: {
+          front: { lat: 44.041324, lon: -92.503713 },
+          middle: { lat: 44.041293, lon: -92.503965 },
+          back: { lat: 44.041260, lon: -92.504200 }
+        },
+        green: {
+          front: { lat: 44.041885, lon: -92.504363 },
+          middle: { lat: 44.041930, lon: -92.504362 },
+          back: { lat: 44.041986, lon: -92.504356 }
+        }
+      }
+    ];
+
+    const holeSelect = document.getElementById("holeSelect");
+    const teeSelect = document.getElementById("teeSelect");
+    const parDisplay = document.getElementById("par");
+    const distFront = document.getElementById("distFront");
+    const distMiddle = document.getElementById("distMiddle");
+    const distBack = document.getElementById("distBack");
+
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R = 6371e3;
+      const φ1 = lat1 * Math.PI / 180;
+      const φ2 = lat2 * Math.PI / 180;
+      const Δφ = (lat2 - lat1) * Math.PI / 180;
+      const Δλ = (lon2 - lon1) * Math.PI / 180;
+
+      const a = Math.sin(Δφ/2)**2 + Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return (R * c) * 1.09361; // meters to yards
+    }
+
+    function updateHoleInfo() {
+      const hole = holes[holeSelect.value];
+      const tee = teeSelect.value;
+      parDisplay.textContent = hole.par;
+
+      navigator.geolocation.getCurrentPosition(pos => {
+        const userLat = pos.coords.latitude;
+        const userLon = pos.coords.longitude;
+
+        distFront.textContent = Math.round(haversine(userLat, userLon, hole.green.front.lat, hole.green.front.lon));
+        distMiddle.textContent = Math.round(haversine(userLat, userLon, hole.green.middle.lat, hole.green.middle.lon));
+        distBack.textContent = Math.round(haversine(userLat, userLon, hole.green.back.lat, hole.green.back.lon));
+      });
+    }
+
+    function populateSelectors() {
+      holes.forEach((hole, i) => {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = `Hole ${hole.number}`;
+        holeSelect.appendChild(opt);
+      });
+
+      ["front", "middle", "back"].forEach(tee => {
+        const opt = document.createElement("option");
+        opt.value = tee;
+        opt.textContent = tee.charAt(0).toUpperCase() + tee.slice(1);
+        teeSelect.appendChild(opt);
+      });
+
+      holeSelect.value = 0;
+      teeSelect.value = "middle";
+      updateHoleInfo();
+    }
+
+    holeSelect.addEventListener("change", updateHoleInfo);
+    teeSelect.addEventListener("change", updateHoleInfo);
+
+    populateSelectors();
+  </script>
+</body>
+</html>
